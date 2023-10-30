@@ -3,6 +3,8 @@ package uk.ac.babraham.Beatbox;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 import loci.common.DebugTools;
@@ -35,7 +37,8 @@ public class ImageLoader {
 			imageReader.setId(file.toString());
 			System.out.println("Images "+imageReader.getImageCount());
 			System.out.println("Pixeltype "+imageReader.getPixelType());
-			System.out.println("BytesPerPixel "+FormatTools.getBytesPerPixel(imageReader.getPixelType()));
+			int bytesPerPixel = FormatTools.getBytesPerPixel(imageReader.getPixelType());
+			System.out.println("BytesPerPixel "+bytesPerPixel);
 			System.out.println("X-Size "+imageReader.getSizeX());
 			System.out.println("Y-Size "+imageReader.getSizeY());
 			System.out.println("Byte length:"+imageReader.openBytes(0).length);
@@ -44,13 +47,28 @@ public class ImageLoader {
 			pixeldata = new PixelMatrix(imageReader.getSizeX(), imageReader.getSizeY(), imageReader.getImageCount());
 			
 			// Populate the data
+			ByteBuffer bb = ByteBuffer.allocate(2);
+			if (imageReader.isLittleEndian()) {
+				bb.order(ByteOrder.LITTLE_ENDIAN);
+			}
+			else {
+				bb.order(ByteOrder.BIG_ENDIAN);
+			}
+			
 			for (int frame=0;frame<imageReader.getImageCount();frame++) {
 				System.err.println("Parsing frame "+frame);
 				byte [] frameBytes = imageReader.openBytes(frame);
+				int byte_position = 0;
 				
 				for (int x=0;x<imageReader.getSizeX();x++) {
 					for (int y=0;y<imageReader.getSizeY();y++) {
-						pixeldata.addValue(y, x, frame, 0);
+						for (int pb=0;pb<bytesPerPixel;pb++) {
+							bb.put(frameBytes[byte_position]);
+							byte_position++;
+						}
+						
+						pixeldata.addValue(y, x, frame, (int)bb.getShort(0));
+						bb.clear();
 					}
 				}
 			}
