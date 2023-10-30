@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
+import loci.common.DebugTools;
 import loci.formats.FormatTools;
 import loci.formats.ImageReader;
 
@@ -26,12 +27,34 @@ public class ImageLoader {
 	private void LoadImage(File file)  {
 		
 		try {
+			// Turn off logging
+			DebugTools.setRootLevel("OFF");
+			
+			// Read the base image
 			ImageReader imageReader = new ImageReader();
 			imageReader.setId(file.toString());
 			System.out.println("Images "+imageReader.getImageCount());
 			System.out.println("Pixeltype "+imageReader.getPixelType());
 			System.out.println("BytesPerPixel "+FormatTools.getBytesPerPixel(imageReader.getPixelType()));
+			System.out.println("X-Size "+imageReader.getSizeX());
+			System.out.println("Y-Size "+imageReader.getSizeY());
+			System.out.println("Byte length:"+imageReader.openBytes(0).length);
+		
 			
+			pixeldata = new PixelMatrix(imageReader.getSizeX(), imageReader.getSizeY(), imageReader.getImageCount());
+			
+			// Populate the data
+			for (int frame=0;frame<imageReader.getImageCount();frame++) {
+				System.err.println("Parsing frame "+frame);
+				byte [] frameBytes = imageReader.openBytes(frame);
+				
+				for (int x=0;x<imageReader.getSizeX();x++) {
+					for (int y=0;y<imageReader.getSizeY();y++) {
+						pixeldata.addValue(y, x, frame, 0);
+					}
+				}
+			}
+
 			
 			imageReader.close();
 		}
