@@ -140,6 +140,16 @@ public class ImageLoader {
 	
 	public static void main(String [] args) {
 //		new ImageLoader(new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/text_image_analysis_test/"));
-		new ImageLoader(new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/C4_ROI2_IF.nd2"));
+		ImageLoader loader =  new ImageLoader(new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/C4_ROI2_IF.nd2"));
+		PeriodicityCalculator calculator = new PeriodicityCalculator(loader.pixeldata);
+		calculator.calculatePeriodicity();
+		
+		try {
+			PeriodicityWriter.savePeriodicity(calculator, new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/C4_ROI2_IF_periodicity.txt"));
+		} 
+		catch (IOException e) {	
+			e.printStackTrace();
+		}
+		
 	}
 }

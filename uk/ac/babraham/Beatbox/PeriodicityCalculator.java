@@ -1,8 +1,9 @@
 package uk.ac.babraham.Beatbox;
 
-import java.util.Vector;
+import uk.ac.babraham.Beatbox.Stats.SimpleStats;
+import uk.ac.babraham.Beatbox.Utilities.FloatVector;
 
-public class PeridocityCalculator {
+public class PeriodicityCalculator {
 
 	private PixelMatrix pixeldata;
 	
@@ -10,9 +11,22 @@ public class PeridocityCalculator {
 	private PeriodicityValues[][] periodicityValues;
 	
 	
-	public PeridocityCalculator(PixelMatrix pixeldata) {
+	public PeriodicityCalculator(PixelMatrix pixeldata) {
 		this.pixeldata = pixeldata;
 	}
+
+	public int rows() {
+		return (periodicityValues.length);
+	}
+	
+	public int cols() {
+		return (periodicityValues[0].length);
+	}
+	
+	public PeriodicityValues getValues(int row, int col) {
+		return (periodicityValues[row][col]);
+	}
+	
 	
 	public void calculatePeriodicity() {
 		
@@ -31,7 +45,7 @@ public class PeridocityCalculator {
 	private PeriodicityValues calculatePeriodicity(int [] values) {
 		
 		// We start by calculating a running smoothed version of the data based on the smoothing window
-		// and subtracting that from the real data.  Effecively centering the data around zero.
+		// and subtracting that from the real data.  Effectively centering the data around zero.
 		
 		int halfWindow = smoothingWindow/2;
 		
@@ -56,9 +70,20 @@ public class PeridocityCalculator {
 		boolean aboveMean = smoothedDiff[0] > 0;
 		int lastCross = 0;
 		
-		Vector<Float>crossTimes = new Vector<Float>();
+		FloatVector crossTimes = new FloatVector();
+
+		
+		float absMean = 0;
 		
 		for (int i=0;i<smoothedDiff.length;i++) {
+			
+			if (smoothedDiff[i]<0) {
+				absMean -= smoothedDiff[i];
+			}
+			else {
+				absMean += smoothedDiff[i];
+			}
+			
 			boolean thisAboveMean = smoothedDiff[i] > 0;
 			
 			if (aboveMean != thisAboveMean) {
@@ -73,10 +98,16 @@ public class PeridocityCalculator {
 			}
 		}
 		
+		
+		absMean /= smoothedDiff.length;
+		
 		// We need to find the mean and stdev of the crossing times.
+		float mean = SimpleStats.mean(crossTimes.toArray());
+		float stdev = SimpleStats.stdev(crossTimes.toArray());
 		
 		
-		return null;
+		
+		return new PeriodicityValues(mean, absMean, stdev);
 	}
 	
 	
