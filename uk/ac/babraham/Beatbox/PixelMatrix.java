@@ -23,4 +23,12 @@ public class PixelMatrix {
 	public int frames () {
 		return (pixeldata[0][0].length);
 	}
+	
+	public int getValue(int row,int col,int frame) {
+		return (pixeldata[row][col][frame]);
+	}
+	
+	public int [] getTimeSeries (int row, int col) {
+		return (pixeldata[row][col]);
+	}
 }

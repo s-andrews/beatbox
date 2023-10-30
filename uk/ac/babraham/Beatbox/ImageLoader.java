@@ -26,6 +26,10 @@ public class ImageLoader {
 		
 	}
 	
+	public PixelMatrix pixeldata () {
+		return pixeldata;
+	}
+	
 	private void LoadImage(File file)  {
 		
 		try {
