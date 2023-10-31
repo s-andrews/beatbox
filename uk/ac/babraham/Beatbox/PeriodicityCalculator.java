@@ -33,8 +33,15 @@ public class PeriodicityCalculator {
 		periodicityValues = new PeriodicityValues[pixeldata.rows()][pixeldata.cols()];
 		
 		// We're going to calculate the periodicity for each pixel
+		int count = 0;
 		for (int row=0;row<pixeldata.rows();row++) {
 			for (int col=0;col<pixeldata.cols();col++) {
+				count++;
+				if (count % 100000 == 0) {
+					if (!BeatBoxPreferences.getInstance().quiet()) {
+						System.err.println("Calculated "+count+" pixels");
+					}
+				}
 				periodicityValues[row][col] = calculatePeriodicity(pixeldata.getTimeSeries(row, col));
 			}
 		}
@@ -104,13 +111,18 @@ public class PeriodicityCalculator {
 		
 		absMean /= smoothedDiff.length;
 		
-		// We need to find the mean and stdev of the crossing times.
-		float mean = SimpleStats.mean(crossTimes.toArray());
-		float stdev = SimpleStats.stdev(crossTimes.toArray());
+		// We need to find the median and stdev of the crossing times.
+
+		// For the crossing time we double the measured value to get a complete cycle
+		// and we multiply by the frame time to get it in the units they specified.
+		float median = SimpleStats.median(crossTimes.toArray())*2*BeatBoxPreferences.getInstance().frameTime();
+		
+		// We also put the stdev into the same units.
+		float stdev = SimpleStats.stdev(crossTimes.toArray())*2*BeatBoxPreferences.getInstance().frameTime();
 		
 		
 		
-		return new PeriodicityValues(mean, absMean, stdev);
+		return new PeriodicityValues(median, absMean, stdev);
 	}
 	
 	

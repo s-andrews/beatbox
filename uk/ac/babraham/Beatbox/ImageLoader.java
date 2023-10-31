@@ -33,24 +33,26 @@ public class ImageLoader {
 	private void LoadImage(File file)  {
 		
 		try {
-			// Turn off logging
+			// Turn off bioformats logging
 			DebugTools.setRootLevel("OFF");
 			
 			// Read the base image
 			ImageReader imageReader = new ImageReader();
 			imageReader.setId(file.toString());
-			System.out.println("Images "+imageReader.getImageCount());
-			System.out.println("Pixeltype "+imageReader.getPixelType());
+
 			int bytesPerPixel = FormatTools.getBytesPerPixel(imageReader.getPixelType());
-			System.out.println("BytesPerPixel "+bytesPerPixel);
-			System.out.println("X-Size "+imageReader.getSizeX());
-			System.out.println("Y-Size "+imageReader.getSizeY());
-			System.out.println("Byte length:"+imageReader.openBytes(0).length);
+
+			if (!BeatBoxPreferences.getInstance().quiet()) {
+				System.err.println("Loading "+file.getName());
+				System.err.println("Images "+imageReader.getImageCount());
+				System.err.println("BytesPerPixel "+bytesPerPixel);
+				System.err.println("X-Size "+imageReader.getSizeX());
+				System.err.println("Y-Size "+imageReader.getSizeY());
+				System.err.println("Byte length:"+imageReader.openBytes(0).length);
+			}
 		
 			
 			pixeldata = new PixelMatrix(imageReader.getSizeX(), imageReader.getSizeY(), imageReader.getImageCount());
-// TESTING ONLY
-//			pixeldata = new PixelMatrix(imageReader.getSizeX(), imageReader.getSizeY(), 100);
 			
 			// Populate the data
 			ByteBuffer bb = ByteBuffer.allocate(2);
@@ -62,13 +64,16 @@ public class ImageLoader {
 			}
 			
 			for (int frame=0;frame<imageReader.getImageCount();frame++) {
-//			for (int frame=0;frame<100;frame++) {
-				System.err.println("Parsing frame "+frame);
+				if (!BeatBoxPreferences.getInstance().quiet()) {
+					if (frame % 10 == 0) {
+						System.err.println("Parsing frame "+frame);
+					}
+				}
 				byte [] frameBytes = imageReader.openBytes(frame);
 				int byte_position = 0;
 				
-				for (int x=0;x<imageReader.getSizeX();x++) {
-					for (int y=0;y<imageReader.getSizeY();y++) {
+				for (int y=0;y<imageReader.getSizeY();y++) {
+					for (int x=0;x<imageReader.getSizeX();x++) {
 						for (int pb=0;pb<bytesPerPixel;pb++) {
 							bb.put(frameBytes[byte_position]);
 							byte_position++;
@@ -140,19 +145,4 @@ public class ImageLoader {
 		
 	}
 	
-	
-	public static void main(String [] args) {
-		ImageLoader loader = new ImageLoader(new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/text_image_analysis_test/"));
-//		ImageLoader loader =  new ImageLoader(new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/C4_ROI2_IF.nd2"));
-		PeriodicityCalculator calculator = new PeriodicityCalculator(loader.pixeldata);
-		calculator.calculatePeriodicity();
-		
-		try {
-			PeriodicityWriter.savePeriodicity(calculator, new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/C4_ROI2_IF_periodicity_text.txt"));
-		} 
-		catch (IOException e) {	
-			e.printStackTrace();
-		}
-		
-	}
 }
