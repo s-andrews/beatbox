@@ -66,6 +66,7 @@ public class ArrayImage implements Comparable<ArrayImage>{
 			for (int col=0;col<sections.length;col++) {
 				pm.addValue(row, col, frame-1, Integer.parseInt(sections[col]) );
 			}
+			row++;
 		}
 		
 		br.close();

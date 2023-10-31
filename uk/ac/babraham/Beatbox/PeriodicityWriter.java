@@ -34,7 +34,6 @@ public class PeriodicityWriter {
 				out.write("\t");
 
 				out.write(Float.toString(pv.stdev));
-				out.write("\t");
 				
 				out.write("\n");
 

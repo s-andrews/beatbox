@@ -49,6 +49,8 @@ public class ImageLoader {
 		
 			
 			pixeldata = new PixelMatrix(imageReader.getSizeX(), imageReader.getSizeY(), imageReader.getImageCount());
+// TESTING ONLY
+//			pixeldata = new PixelMatrix(imageReader.getSizeX(), imageReader.getSizeY(), 100);
 			
 			// Populate the data
 			ByteBuffer bb = ByteBuffer.allocate(2);
@@ -60,6 +62,7 @@ public class ImageLoader {
 			}
 			
 			for (int frame=0;frame<imageReader.getImageCount();frame++) {
+//			for (int frame=0;frame<100;frame++) {
 				System.err.println("Parsing frame "+frame);
 				byte [] frameBytes = imageReader.openBytes(frame);
 				int byte_position = 0;
@@ -139,13 +142,13 @@ public class ImageLoader {
 	
 	
 	public static void main(String [] args) {
-//		new ImageLoader(new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/text_image_analysis_test/"));
-		ImageLoader loader =  new ImageLoader(new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/C4_ROI2_IF.nd2"));
+		ImageLoader loader = new ImageLoader(new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/text_image_analysis_test/"));
+//		ImageLoader loader =  new ImageLoader(new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/C4_ROI2_IF.nd2"));
 		PeriodicityCalculator calculator = new PeriodicityCalculator(loader.pixeldata);
 		calculator.calculatePeriodicity();
 		
 		try {
-			PeriodicityWriter.savePeriodicity(calculator, new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/C4_ROI2_IF_periodicity.txt"));
+			PeriodicityWriter.savePeriodicity(calculator, new File("E:/Illumina Analysis/Stephen Cranwell/Periodicity Analysis/Data Parsing Test/C4_ROI2_IF_periodicity_text.txt"));
 		} 
 		catch (IOException e) {	
 			e.printStackTrace();

@@ -48,6 +48,7 @@ public class PeriodicityCalculator {
 		// and subtracting that from the real data.  Effectively centering the data around zero.
 		
 		int halfWindow = smoothingWindow/2;
+//		System.out.println("Half window is "+halfWindow);
 		
 		float [] smoothedDiff = new float[values.length-smoothingWindow];
 		
@@ -58,8 +59,9 @@ public class PeriodicityCalculator {
 		}
 		
 		for (int i=0;i<smoothedDiff.length;i++) {
-			smoothedDiff[i] = values[smoothingWindow+halfWindow] - (runningValue/smoothingWindow);
-			runningValue =- values[i];
+			smoothedDiff[i] = (float)values[i+halfWindow] - (runningValue/smoothingWindow);
+//			System.out.println("i "+i+" Value "+values[i+halfWindow]+" Running "+(runningValue/smoothingWindow)+" Smoothed "+smoothedDiff[i]);
+			runningValue -= values[i];
 			runningValue += values[smoothingWindow+i];
 		}
 		
@@ -91,8 +93,9 @@ public class PeriodicityCalculator {
 				if (lastCross != 0) {
 					// This is not the first cross
 					crossTimes.add((float)(i-lastCross));
+//					System.out.println("Crossed at "+(i-lastCross));
 				}
-				// This is the first cross
+
 				lastCross = i;
 				aboveMean = thisAboveMean;
 			}
