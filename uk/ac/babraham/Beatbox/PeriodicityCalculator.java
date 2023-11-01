@@ -7,7 +7,7 @@ public class PeriodicityCalculator {
 
 	private PixelMatrix pixeldata;
 	
-	private int smoothingWindow = 50;
+	private int smoothingWindow = BeatBoxPreferences.getInstance().smoothingFrames();
 	private PeriodicityValues[][] periodicityValues;
 	
 	
@@ -115,14 +115,17 @@ public class PeriodicityCalculator {
 
 		// For the crossing time we double the measured value to get a complete cycle
 		// and we multiply by the frame time to get it in the units they specified.
+		float mean = SimpleStats.mean(crossTimes.toArray())*2*BeatBoxPreferences.getInstance().frameTime();
 		float median = SimpleStats.median(crossTimes.toArray())*2*BeatBoxPreferences.getInstance().frameTime();
+		float mode = SimpleStats.mode(crossTimes.toArray())*2*BeatBoxPreferences.getInstance().frameTime();
+
 		
 		// We also put the stdev into the same units.
 		float stdev = SimpleStats.stdev(crossTimes.toArray())*2*BeatBoxPreferences.getInstance().frameTime();
 		
 		
 		
-		return new PeriodicityValues(median, absMean, stdev);
+		return new PeriodicityValues(mean, median, mode, absMean, stdev);
 	}
 	
 	

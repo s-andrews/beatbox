@@ -27,7 +27,7 @@ BeatBox is run in a command line environment.  It should work on any Operating S
 BeatBox - Periodicity Analysis for Microscopy Images
 
 Usage:
-  java -jar beatbox.jar [--quiet] [--help] [--frametime 1] [input_file] [output_file]
+  java -jar beatbox.jar [--quiet] [--help] [--frametime 1] [--smoothing 50] [input_file] [output_file]
 
 Options:
 
@@ -37,7 +37,9 @@ Options:
 
   --version       Print the program version and exit
 
-  --frametime     The duration of one frame
+  --frametime     The duration of one frame (default 1)
+  
+  --smoothing     The number of frames to use for background smoothing subtraction (default 50)
 
   input_file      Either the location of a single nd2 format file or a folder
                   containing text of extracted pixel intensities with one
@@ -53,8 +55,10 @@ The program's output is a 4 column text file where the columns are:
 
 1. The X position for the image
 2. The Y position for the image
-3. The inter-peak periodicity time for the pixel
-4. The signal strength variation - how much the pixel intensity deviates from the mean
+3. The mean inter-peak periodicity time for the pixel
+4. The median inter-peak periodicity time for the pixel
+5. The mode inter-peak periodicity time for the pixel
+4. The signal strength variation - how much the pixel intensity deviates from the smoothed mean
 5. The standard deviation of the periodicity intervals 
 
 

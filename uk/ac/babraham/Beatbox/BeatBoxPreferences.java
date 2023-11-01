@@ -11,6 +11,7 @@ public class BeatBoxPreferences {
 	private File inputFile = null;
 	private File outputFile = null;
 	private float frameTime = 1;
+	private int smoothingFrames = 50;
 	private boolean quiet = false;
 	
 	
@@ -30,6 +31,10 @@ public class BeatBoxPreferences {
 	
 	public float frameTime () {
 		return frameTime;
+	}
+	
+	public int smoothingFrames() {
+		return smoothingFrames;
 	}
 	
 	public boolean quiet () {
@@ -53,6 +58,11 @@ public class BeatBoxPreferences {
 				i++;
 				frameTime = Float.parseFloat(args[i]);
 			}
+			else if (args[i].equals("--smoothing")) {
+				i++;
+				smoothingFrames = Integer.parseInt(args[i]);
+			}
+
 			else if (inputFile == null) {
 				inputFile = new File(args[i]);
 			}

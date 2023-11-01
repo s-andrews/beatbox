@@ -11,10 +11,17 @@ Options:
   
   --version       Print the program version and exit
   
-  --frametime     The duration of one frame
+  --frametime     The duration of one frame (default 1)
+  
+  --smoothing     The number of frames to use for background smoothing subtraction (default 50)
   
   input_file      Either the location of a single nd2 format file or a folder 
                   containing text of extracted pixel intensities with one 
                   file per frame.
 
   output_file     A text file into which to write the output
+  
+  
+Output:
+  
+  The output is a tab delimiteed text file.

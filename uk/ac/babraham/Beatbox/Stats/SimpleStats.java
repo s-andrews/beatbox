@@ -77,6 +77,38 @@ public class SimpleStats {
 		
 	}
 	
+	
+	/**
+	 * Mode
+	 * 
+	 * @param values the values
+	 * @return the mode
+	 */
+	public static float mode (float [] values) {
+		
+		if (values.length == 0) return 0;
+		
+		Arrays.sort(values);
+		float bestValue = values[0];
+		int maxCount = 1;
+		int count = 1;
+		for (int i=1;i<values.length;i++) {
+			if (values[i] == values[i-1]) {
+				count++;
+				if (count > maxCount) {
+					bestValue = values[i];
+					maxCount = count;
+				}
+			}
+			else {
+				count = 1;
+			}
+		}
+				
+		return bestValue;
+		
+	}
+	
 	/**
 	 * Median.
 	 * 

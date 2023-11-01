@@ -12,7 +12,15 @@ public class PeriodicityWriter {
 		
 		BufferedWriter out = new BufferedWriter(new FileWriter(outfile));
 		
-		String [] headers = new String[] {"X","Y","Periodicity","Signal","StDev"};
+		// Write out the preferences used for the run.
+		out.write("# "+BeatBoxApplication.VERSION+"\n");
+		out.write("# Input:"+BeatBoxPreferences.getInstance().inputFile()+"\n");
+		out.write("# Output:"+BeatBoxPreferences.getInstance().outputFile()+"\n");
+		out.write("# FrameTime:"+BeatBoxPreferences.getInstance().frameTime()+"\n");
+		out.write("# Smoothing:"+BeatBoxPreferences.getInstance().smoothingFrames()+"\n");
+
+		
+		String [] headers = new String[] {"X","Y","PeriodicityMean","PeriodicityMedian","PeriodicityMode","Signal","StDev"};
 		
 		out.write(String.join("\t", headers));
 		out.write("\n");
@@ -27,7 +35,13 @@ public class PeriodicityWriter {
 				out.write(Integer.toString(y));
 				out.write("\t");
 				
-				out.write(Float.toString(pv.periodicity));
+				out.write(Float.toString(pv.periodicityMean));
+				out.write("\t");
+
+				out.write(Float.toString(pv.periodicityMedian));
+				out.write("\t");
+
+				out.write(Float.toString(pv.periodicityMode));
 				out.write("\t");
 
 				out.write(Float.toString(pv.meanIntensityDiff));
