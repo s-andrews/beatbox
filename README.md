@@ -6,7 +6,9 @@ Background
 
 BeatBox is a command line application which analyses cellular beating patterns in microsopy images.
 
-It takes in an nd2 format image stack file and looks at the pixel intensities for each pixel in the image over the frames of the stack to look for periodic oscillations induced by celluar beating.
+It takes in an nd2 format image stack file and looks at the pixel intensities for each pixel in the image over the frames of the stack to look for periodic oscillations induced by celluar beating such as the ones shown in the very zoomed in image below.
+
+![Cellular Beating](https://raw.githubusercontent.com/s-andrews/beatbox/main/uk/ac/babraham/Beatbox/Help/cellbeating.gif)
 
 For each pixel in the image the program will report the estimated duration of the beating pattern along with some metrics to allow you to guage the signal to noise ratio and the accuracy of the reported periodicity value.
 
