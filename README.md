@@ -51,7 +51,7 @@ Options:
 Output
 ------
 
-The program's output is a 4 column text file where the columns are:
+The program's output is a 7 column text file where the columns are:
 
 1. The X position for the image
 2. The Y position for the image
