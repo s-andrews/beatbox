@@ -115,7 +115,7 @@ public class ImageLoader {
 			
 			for (int frame=0;frame<imageReader.getImageCount();frame++) {
 				if (!BeatBoxPreferences.getInstance().quiet()) {
-					if (frame % 10 == 0) {
+					if (frame % 100 == 0) {
 						System.err.println("Parsing frame "+frame);
 					}
 				}
