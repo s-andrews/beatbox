@@ -5,9 +5,16 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 
 import loci.common.DebugTools;
+import loci.formats.CoreMetadata;
 import loci.formats.FormatTools;
 import loci.formats.ImageReader;
 
@@ -39,7 +46,49 @@ public class ImageLoader {
 			// Read the base image
 			ImageReader imageReader = new ImageReader();
 			imageReader.setId(file.toString());
+			
+			// Set the frame rate from the image if it's not set already
+			if (!BeatBoxPreferences.getInstance().frameRateSet()) {
+				
+				// We have to work the framerate out from the timestamps on the
+				// frames.  We're going to assume that all frames are equally spaced.
+				// The timestamp metadata appears to look like "timestamp #001". But
+				// it might be that the number of digits in the end is different in
+				// different images.  The timestamps are in a hash so do not appear
+				// in order.
+				
+				// We'll get the full list of timestamps, and then sort them.
+				Hashtable<String,Object>metadata = imageReader.getSeriesMetadata();
+				
+				Enumeration<String> en = metadata.keys();
 
+				ArrayList<String> timestamps = new ArrayList<String>();
+				
+				while (en.hasMoreElements()) {
+					String key = en.nextElement();
+					if (key.startsWith("timestamp")) {
+						timestamps.add(key);
+					}
+				}
+
+				
+				// Sort the timestamp text.
+				Collections.sort(timestamps);
+				
+				// Now get the first two values out and calculate the difference
+				double ts1 = (Double)(metadata.get(timestamps.get(0)));
+				double ts2 = (Double)(metadata.get(timestamps.get(1)));
+				double diff = ts2-ts1;
+				float fps = 1f/(float)diff;
+				
+				if (!BeatBoxPreferences.getInstance().quiet()) {
+					System.err.println("Calculated FPS of "+fps+" from "+timestamps.get(0)+" and "+timestamps.get(1));
+				}
+				
+			}
+
+		
+			
 			int bytesPerPixel = FormatTools.getBytesPerPixel(imageReader.getPixelType());
 
 			if (!BeatBoxPreferences.getInstance().quiet()) {

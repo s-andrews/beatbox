@@ -10,7 +10,8 @@ public class BeatBoxPreferences {
 	private static BeatBoxPreferences instance = new BeatBoxPreferences();
 	private File inputFile = null;
 	private File outputFile = null;
-	private float frameTime = 1;
+	private float frameRate = 20;
+	private boolean frameRateSet = false;
 	private int smoothingFrames = 50;
 	private boolean quiet = false;
 	
@@ -29,8 +30,12 @@ public class BeatBoxPreferences {
 		return outputFile;
 	}
 	
-	public float frameTime () {
-		return frameTime;
+	public float frameRate () {
+		return frameRate;
+	}
+	
+	public boolean frameRateSet () {
+		return frameRateSet;
 	}
 	
 	public int smoothingFrames() {
@@ -54,9 +59,10 @@ public class BeatBoxPreferences {
 			else if (args[i].equals("--quiet")) {
 				quiet=true;
 			}
-			else if (args[i].equals("--frametime")) {
+			else if (args[i].equals("--framerate")) {
 				i++;
-				frameTime = Float.parseFloat(args[i]);
+				frameRate = Float.parseFloat(args[i]);
+				frameRateSet = true;
 			}
 			else if (args[i].equals("--smoothing")) {
 				i++;
@@ -71,6 +77,11 @@ public class BeatBoxPreferences {
 			}
 		}
 		
+	}
+	
+	public void setFrameRate(float framerate) {
+		this.frameRate = framerate;
+		frameRateSet = true;
 	}
 	
 	private static void showHelp() {

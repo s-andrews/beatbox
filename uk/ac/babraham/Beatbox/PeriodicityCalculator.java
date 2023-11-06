@@ -114,18 +114,31 @@ public class PeriodicityCalculator {
 		// We need to find the median and stdev of the crossing times.
 
 		// For the crossing time we double the measured value to get a complete cycle
-		// and we multiply by the frame time to get it in the units they specified.
-		float mean = SimpleStats.mean(crossTimes.toArray())*2*BeatBoxPreferences.getInstance().frameTime();
-		float median = SimpleStats.median(crossTimes.toArray())*2*BeatBoxPreferences.getInstance().frameTime();
-		float mode = SimpleStats.mode(crossTimes.toArray())*2*BeatBoxPreferences.getInstance().frameTime();
+						
+		float mean = SimpleStats.mean(crossTimes.toArray())*2;
+		float median = SimpleStats.median(crossTimes.toArray())*2;
+		float mode = SimpleStats.mode(crossTimes.toArray())*2;
 
+		float stdev = SimpleStats.stdev(crossTimes.toArray())*2;
+
+		// Our values are in frames, and we need them in Hz.  To do this we need the
+		// framerate (in frames per second)
+		float frameRate = BeatBoxPreferences.getInstance().frameRate();
 		
-		// We also put the stdev into the same units.
-		float stdev = SimpleStats.stdev(crossTimes.toArray())*2*BeatBoxPreferences.getInstance().frameTime();
+		// The frame duration (in seconds) is 1/frameRate
+		
+		float frameDuration = 1/frameRate;
 		
 		
+		// The conversion from the number of frames per cycle to Hz is 1 / (frames * duration)
 		
-		return new PeriodicityValues(mean, median, mode, absMean, stdev);
+		float meanHz = 1 / (mean*frameDuration);
+		float medianHz = 1 / (median*frameDuration);
+		float modeHz = 1 / (mode*frameDuration);
+		
+		float stdevHz = 1 / (stdev*frameDuration);
+				
+		return new PeriodicityValues(meanHz, medianHz, modeHz, absMean, stdevHz);
 	}
 	
 	

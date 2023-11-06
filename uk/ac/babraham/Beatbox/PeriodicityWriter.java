@@ -16,7 +16,7 @@ public class PeriodicityWriter {
 		out.write("# "+BeatBoxApplication.VERSION+"\n");
 		out.write("# Input:"+BeatBoxPreferences.getInstance().inputFile()+"\n");
 		out.write("# Output:"+BeatBoxPreferences.getInstance().outputFile()+"\n");
-		out.write("# FrameTime:"+BeatBoxPreferences.getInstance().frameTime()+"\n");
+		out.write("# FrameRate:"+BeatBoxPreferences.getInstance().frameRate()+"\n");
 		out.write("# Smoothing:"+BeatBoxPreferences.getInstance().smoothingFrames()+"\n");
 
 		

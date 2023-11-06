@@ -11,7 +11,7 @@ Options:
   
   --version       Print the program version and exit
   
-  --frametime     The duration of one frame (default 1)
+  --framerate     The number of frames per second. Taken from the metadata by default.  Set to 20 if not found
   
   --smoothing     The number of frames to use for background smoothing subtraction (default 50)
   
