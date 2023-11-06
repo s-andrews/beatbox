@@ -85,6 +85,7 @@ public class ImageLoader {
 					System.err.println("Calculated FPS of "+fps+" from "+timestamps.get(0)+" and "+timestamps.get(1));
 				}
 				
+				BeatBoxPreferences.getInstance().setFrameRate(fps);
 			}
 
 		
