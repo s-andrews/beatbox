@@ -10,11 +10,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
 
 import loci.common.DebugTools;
-import loci.formats.CoreMetadata;
 import loci.formats.FormatTools;
 import loci.formats.ImageReader;
 
