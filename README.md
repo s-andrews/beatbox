@@ -17,6 +17,8 @@ Installation
 
 BeatBox is distributed as a single java jar file. You will also need an installation of a Java Runtime Environment such as those available from https://adoptium.net/.
 
+BeatBox makes use of the [BioFormats](https://www.openmicroscopy.org/bio-formats/) libraries for reading nd2 files.
+
 
 Running
 -------
@@ -55,13 +57,13 @@ Output
 
 The program's output is a 7 column text file where the columns are:
 
-1. The X position for the image
-2. The Y position for the image
-3. The mean inter-peak periodicity time for the pixel
-4. The median inter-peak periodicity time for the pixel
-5. The mode inter-peak periodicity time for the pixel
-4. The signal strength variation - how much the pixel intensity deviates from the smoothed mean
-5. The standard deviation of the periodicity intervals 
+1. X pixel position
+2. Y pixel position
+3. Frequency Mean (Hz)
+4. Frequency Median (Hz)
+5. Frequency Mode (Hz)
+6. Signal Strength
+7. Frequency Standard Deviation
 
 
 Algorithm

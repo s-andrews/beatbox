@@ -24,4 +24,19 @@ Options:
   
 Output:
   
-  The output is a tab delimiteed text file.
+  The output is a tab delimited text file containing the following columns:
+  
+   1. X pixel position
+   2. Y pixel position
+   3. Frequency Mean (Hz)
+   4. Frequency Median (Hz)
+   5. Frequency Mode (Hz)
+   6. Signal Strength
+   7. Frequency Standard Deviation
+   
+   
+Licensing:
+
+  BeatBox is distributed under the GNU General Public License.  It uses the BioFormat image libraries
+  (https://www.openmicroscopy.org/bio-formats/) to read nd2 files.
+  
