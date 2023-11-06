@@ -99,7 +99,7 @@ public class ImageLoader {
 			}
 		
 			
-			pixeldata = new PixelMatrix(imageReader.getSizeX(), imageReader.getSizeY(), imageReader.getImageCount());
+			pixeldata = new PixelMatrix(imageReader.getSizeY(), imageReader.getSizeX(), imageReader.getImageCount());
 			
 			// Populate the data
 			ByteBuffer bb = ByteBuffer.allocate(2);
