@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class BeatBoxApplication {
 	
-	public static String VERSION = "BeatBox v0.5";
+	public static String VERSION = "BeatBox v0.4";
 
 	public static void main(String[] args) {
 
