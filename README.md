@@ -55,15 +55,16 @@ Options:
 Output
 ------
 
-The program's output is a 7 column text file where the columns are:
+The program's output is an 8 column text file where the columns are:
 
 1. X pixel position
 2. Y pixel position
 3. Frequency Mean (Hz)
 4. Frequency Median (Hz)
 5. Frequency Mode (Hz)
-6. Signal Strength
-7. Frequency Standard Deviation
+6. Average pixel intensity
+7. Periodicity Signal Strength
+8. Frequency Standard Deviation
 
 
 Algorithm
