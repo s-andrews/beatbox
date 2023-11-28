@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class BeatBoxApplication {
 	
-	public static String VERSION = "BeatBox v0.3";
+	public static String VERSION = "BeatBox v0.5";
 
 	public static void main(String[] args) {
 
@@ -14,7 +14,8 @@ public class BeatBoxApplication {
 		ImageLoader loader =  new ImageLoader(prefs.inputFile());
 		if (!prefs.quiet()) {
 			System.err.println("Calculating periodicity for "+(loader.pixeldata().cols()*loader.pixeldata().rows())+" pixels");
-		}
+		}		
+		
 		PeriodicityCalculator calculator = new PeriodicityCalculator(loader.pixeldata());
 		calculator.calculatePeriodicity();
 		

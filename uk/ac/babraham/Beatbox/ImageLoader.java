@@ -126,7 +126,12 @@ public class ImageLoader {
 							byte_position++;
 						}
 						
-						pixeldata.addValue(y, x, frame, (int)bb.getShort(0));
+						// The values coming from the image are unsigned shorts.  Since
+						// java doesn't support these we need to convert them to ints
+						// and not allowing them to be interpreted as negative values.
+						// 
+						// This solution came from https://stackoverflow.com/questions/9883472/is-it-possible-to-have-an-unsigned-bytebuffer-in-java
+						pixeldata.addValue(y, x, frame, bb.getShort(0) & 0xffff);
 						bb.clear();
 					}
 				}
