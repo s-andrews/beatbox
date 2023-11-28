@@ -20,7 +20,7 @@ public class PeriodicityWriter {
 		out.write("# Smoothing:"+BeatBoxPreferences.getInstance().smoothingFrames()+"\n");
 
 		
-		String [] headers = new String[] {"X","Y","FrequencyMean","FrequencyMedian","FrequencyMode","Signal","StDev"};
+		String [] headers = new String[] {"X","Y","FrequencyMean","FrequencyMedian","FrequencyMode","Intensity","Signal","StDev"};
 		
 		out.write(String.join("\t", headers));
 		out.write("\n");
@@ -44,6 +44,9 @@ public class PeriodicityWriter {
 				out.write(Float.toString(pv.periodicityMode));
 				out.write("\t");
 
+				out.write(Float.toString(pv.meanIntensity));
+				out.write("\t");
+				
 				out.write(Float.toString(pv.meanIntensityDiff));
 				out.write("\t");
 

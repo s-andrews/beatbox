@@ -50,6 +50,13 @@ public class PeriodicityCalculator {
 	
 	
 	private PeriodicityValues calculatePeriodicity(int [] values) {
+
+		// Get the overall intensity mean for this pixel
+		float meanIntensity = 0;
+		for (int i=0;i<values.length;i++) {
+			meanIntensity += values[i];
+		}
+		meanIntensity /= values.length;
 		
 		// We start by calculating a running smoothed version of the data based on the smoothing window
 		// and subtracting that from the real data.  Effectively centering the data around zero.
@@ -58,8 +65,9 @@ public class PeriodicityCalculator {
 //		System.out.println("Half window is "+halfWindow);
 		
 		float [] smoothedDiff = new float[values.length-smoothingWindow];
-		
+
 		float runningValue = 0;
+		
 		
 		for (int i=0;i<smoothingWindow;i++) {
 			runningValue += (float)values[i];
@@ -138,7 +146,7 @@ public class PeriodicityCalculator {
 		
 		float stdevHz = 1 / (stdev*frameDuration);
 				
-		return new PeriodicityValues(meanHz, medianHz, modeHz, absMean, stdevHz);
+		return new PeriodicityValues(meanHz, medianHz, modeHz, meanIntensity, absMean, stdevHz);
 	}
 	
 	
