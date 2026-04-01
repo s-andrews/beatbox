@@ -14,6 +14,9 @@ public class BeatBoxPreferences {
 	private boolean frameRateSet = false;
 	private int smoothingFrames = 50;
 	private boolean quiet = false;
+	private boolean debug = false;
+	private int debug_x = 0;
+	private int debug_y = 0;
 	
 	
 	private BeatBoxPreferences() {}
@@ -42,6 +45,19 @@ public class BeatBoxPreferences {
 		return smoothingFrames;
 	}
 	
+	public boolean debug() {
+		return debug;
+	}
+	
+	public int debug_x() {
+		return debug_x;
+	}
+
+	public int debug_y() {
+		return debug_y;
+	}
+
+	
 	public boolean quiet () {
 		return quiet;
 	}
@@ -59,6 +75,22 @@ public class BeatBoxPreferences {
 			else if (args[i].equals("--quiet")) {
 				quiet=true;
 			}
+			else if (args[i].equals("--debug")) {
+				i++;
+				String [] debugPixels = args[i].split(":");
+				
+				if (debugPixels.length != 2) {
+					System.err.println("Debug value must be of the format 123:535 (x:y pixel location)");
+					System.exit(1);
+				}
+
+				debug = true;
+				debug_x = Integer.parseInt(debugPixels[0]);
+				debug_y = Integer.parseInt(debugPixels[1]);
+				System.out.println("Writing debug output for pixel x="+debug_x+" y="+debug_y);
+
+			}
+
 			else if (args[i].equals("--framerate")) {
 				i++;
 				frameRate = Float.parseFloat(args[i]);

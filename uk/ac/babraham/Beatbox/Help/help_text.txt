@@ -15,6 +15,8 @@ Options:
   
   --smoothing     The number of frames to use for background smoothing subtraction (default 50)
   
+  --debug         Output debug information for a single pixel in x:y format, eg: 254:772
+  
   input_file      Either the location of a single nd2 format file or a folder 
                   containing text of extracted pixel intensities with one 
                   file per frame.

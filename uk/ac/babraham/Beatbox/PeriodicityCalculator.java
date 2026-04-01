@@ -1,5 +1,9 @@
 package uk.ac.babraham.Beatbox;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import uk.ac.babraham.Beatbox.Stats.SimpleStats;
 import uk.ac.babraham.Beatbox.Utilities.FloatVector;
 
@@ -10,9 +14,25 @@ public class PeriodicityCalculator {
 	private int smoothingWindow = BeatBoxPreferences.getInstance().smoothingFrames();
 	private PeriodicityValues[][] periodicityValues;
 	
+	private boolean debug;
+	private int debug_x;
+	private int debug_y;
+	private BufferedWriter debugout_pixel;
+	private BufferedWriter debugout_cross;
 	
-	public PeriodicityCalculator(PixelMatrix pixeldata) {
+	
+	public PeriodicityCalculator(PixelMatrix pixeldata, BeatBoxPreferences prefs) throws IOException {
 		this.pixeldata = pixeldata;
+		
+		debug = prefs.debug();
+		
+		if (debug) {
+			debug_x = prefs.debug_x();
+			debug_y = prefs.debug_y();
+			System.out.println("Making debug output file");
+			debugout_pixel = new BufferedWriter(new FileWriter("debug_pixel_"+debug_x+"_"+debug_y+".txt"));
+			debugout_cross = new BufferedWriter(new FileWriter("debug_cross_"+debug_x+"_"+debug_y+".txt"));
+		}
 	}
 
 	public int rows() {
@@ -28,7 +48,7 @@ public class PeriodicityCalculator {
 	}
 	
 	
-	public void calculatePeriodicity() {
+	public void calculatePeriodicity() throws IOException {
 		
 		periodicityValues = new PeriodicityValues[pixeldata.rows()][pixeldata.cols()];
 		
@@ -36,20 +56,27 @@ public class PeriodicityCalculator {
 		int count = 0;
 		for (int row=0;row<pixeldata.rows();row++) {
 			for (int col=0;col<pixeldata.cols();col++) {
+				
+				boolean debugThisPixel = false;
+
+				if (debug && row == debug_y && col==debug_x) {
+					debugThisPixel = true;
+				}
+				
 				count++;
 				if (count % 100000 == 0) {
 					if (!BeatBoxPreferences.getInstance().quiet()) {
 						System.err.println("Calculated "+count+" pixels");
 					}
 				}
-				periodicityValues[row][col] = calculatePeriodicity(pixeldata.getTimeSeries(row, col));
+				periodicityValues[row][col] = calculatePeriodicity(pixeldata.getTimeSeries(row, col), debugThisPixel);
 			}
 		}
 		
 	}
 	
 	
-	private PeriodicityValues calculatePeriodicity(int [] values) {
+	private PeriodicityValues calculatePeriodicity(int [] values, boolean writeDebug) throws IOException {
 
 		// Get the overall intensity mean for this pixel
 		float meanIntensity = 0;
@@ -83,6 +110,23 @@ public class PeriodicityCalculator {
 		// Add the last one
 		smoothedDiff[smoothedDiff.length-1] = values[smoothingWindow+halfWindow] - (runningValue/smoothingWindow);
 		
+		// If we're outputting debug output then record this now
+		
+		if (writeDebug) {
+			System.out.println("Writing debug info");
+			for (int i=0;i<smoothedDiff.length;i++) {
+				int orig_value = values[i];
+				float smoothed_value = smoothedDiff[i];
+				
+				
+				debugout_pixel.write(""+orig_value+"\t"+smoothed_value+"\n");
+				
+			}
+			debugout_pixel.close();
+		}
+		
+		
+		
 		// Now we go through the data finding the crossing points.
 		boolean aboveMean = smoothedDiff[0] > 0;
 		int lastCross = 0;
@@ -108,6 +152,11 @@ public class PeriodicityCalculator {
 				if (lastCross != 0) {
 					// This is not the first cross
 					crossTimes.add((float)(i-lastCross));
+					
+					if (writeDebug) {
+						debugout_cross.write(""+lastCross+"\t"+i+"\t"+(float)(i-lastCross)+"\n");
+					}
+					
 //					System.out.println("Crossed at "+(i-lastCross));
 				}
 
@@ -116,6 +165,9 @@ public class PeriodicityCalculator {
 			}
 		}
 		
+		if (writeDebug) {
+			debugout_cross.close();
+		}
 		
 		absMean /= smoothedDiff.length;
 		
@@ -144,7 +196,10 @@ public class PeriodicityCalculator {
 		float medianHz = 1 / (median*frameDuration);
 		float modeHz = 1 / (mode*frameDuration);
 		
-		float stdevHz = 1 / (stdev*frameDuration);
+		// The calculation of stdevHz isn't just a multiplication of the frameDuration, instead
+		// we should scale this by multiplying the meanHz by the ratio of stdev/mean from the raw
+		// data
+		float stdevHz = meanHz * (stdev/mean);
 				
 		return new PeriodicityValues(meanHz, medianHz, modeHz, meanIntensity, absMean, stdevHz);
 	}
